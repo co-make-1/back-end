@@ -4,7 +4,7 @@
   "description": "|Status|Type|Description|Message|Return Value |------|----|-----------|-------|------------| 200|Success|Logged in.|\"Logged in (username)\"|```{message: \"Logged in (username)\", token: string (token)}```",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch",
+    "test": "cross-env DB_ENV=testing jest --watch",
     "server": "nodemon index.js",
     "start": "node index.js"
   },
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/co-make-1/back-end#readme",
   "devDependencies": {
+    "cross-env": "^7.0.1",
     "jest": "^25.1.0",
     "nodemon": "^2.0.2",
     "supertest": "^4.0.2"
@@ -33,6 +34,7 @@
     "express": "^4.17.1",
     "helmet": "^3.21.3",
     "knex": "^0.20.10",
-    "pg": "^7.18.2"
+    "pg": "^7.18.2",
+    "sqlite3": "^4.1.1"
   }
 }
