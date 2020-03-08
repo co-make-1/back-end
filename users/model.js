@@ -1,25 +1,59 @@
-const express = require('express');
+const db = require("../database/connection.js");
 
-const Users = require('./model');
+module.exports = {
+  all,
+  find,
+  findById,
+  findUsers,
+  add,
+  update,
+  remove
+};
 
-const router = express.Router();
+function all() {
+  return db("users");
+}
 
-router.post('/:id/issues', (req, res) => {
-  const issueData = req.body;
-  const { id } = req.params; 
+function find() {
+  return db('users')
+}
 
-  Users.findById(id)
-  .then(scheme => {
-    if (scheme) {
-      Users.addUser(issueData, id)
-      .then(user => {
-        res.status(201).json(user);
-      })
-    } else {
-      res.status(404).json({ message: 'Could not find user with given id.' })
-    }
+function findById(id) {
+    return db('users')
+      .where({ id })
+      .first();
+}
+
+function findUsers(id) {
+    return db('users as u')
+    .join('issues as i', 'i.id', 'u.issueId')
+    .select('i.id', 'i.name')
+    .where('u.id', id)
+    .first();
+}
+
+function add(issue){
+  return db('users').insert(issue)
+  .then(id => {
+    return findById(id)
   })
-  .catch (err => {
-    res.status(500).json({ message: 'Failed to create new user' });
-  });
-});
+}
+
+function update(changes, id){
+    return db('users')
+    .where({id})
+    .update(changes, id)
+    .then(numChanged => {
+        return findById(id)
+    });
+}
+
+async function remove(id){
+    const deletedUser = await findById(id)
+    return db('users')
+    .where({id})
+    .del()
+    .then(numDeleted => {
+        return deletedUser
+    });
+}
